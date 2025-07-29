@@ -19,17 +19,29 @@
   margin-bottom: 5px;
 }
 
-.keypad {
-  max-width: 500px;
+.key-row {
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
 
-.keypad > .key {
+.key {
   margin: 2.5px;
-  width: 40px;
+  width: auto;
+  min-width: 40px;
   height: 40px;
+  padding: 0 5px;
   background-color: grey;
   border-radius: 10%;
   display: inline-block;
   text-align: center;
   line-height: 40px;
+  cursor: pointer;
+}
+.key:hover {
+  background-color: rgba(128, 128, 128, 0.5);
+}
+
+#action {
+  width: 100%;
 }
