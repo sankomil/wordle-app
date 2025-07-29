@@ -16,21 +16,21 @@ export const useWordle = () => {
 
   const validateCurrGuess = () => {
     const solArray: (string | null)[] = selectedWord.split("");
-    const currGuessArray = currentGuess
+    const currGuessArray: ILetter[] = currentGuess
       .split("")
-      .map((l) => ({ value: l, status: "invalidated" } as ILetter));
+      .map((l) => ({ value: l, status: "invalidated" }));
 
     // Find correct letters (green)
-    const guessWithCorrect = currGuessArray.map((letterObj, i) => {
+    const guessWithCorrect: ILetter[] = currGuessArray.map((letterObj, i) => {
       if (solArray[i] === letterObj.value) {
         solArray[i] = null; // remove from pool
-        return { ...letterObj, status: "correct" } as ILetter;
+        return { ...letterObj, status: "correct" };
       }
       return letterObj;
     });
 
     // Find misplaced letters (yellow)
-    const finalValidatedGuess = guessWithCorrect.map((letterObj) => {
+    const finalValidatedGuess: ILetter[] = guessWithCorrect.map((letterObj) => {
       if (letterObj.status === "correct") {
         return letterObj;
       }
@@ -39,10 +39,10 @@ export const useWordle = () => {
 
       if (letterIndex > -1) {
         solArray[letterIndex] = null; // remove from pool
-        return { ...letterObj, status: "misplaced" } as ILetter;
+        return { ...letterObj, status: "misplaced" };
       }
 
-      return { ...letterObj, status: "incorrect" } as ILetter;
+      return { ...letterObj, status: "incorrect" };
     });
 
     return finalValidatedGuess;
@@ -52,7 +52,6 @@ export const useWordle = () => {
     if (turn + 1 === attempts || currentGuess === selectedWord) {
       return;
     }
-    console.log(currentGuess, selectedWord);
     const currValidation = validateCurrGuess();
     setGuesses((prev) => [...prev, currValidation]);
     setTurn((prev) => prev + 1);
@@ -67,6 +66,7 @@ export const useWordle = () => {
         addCurrGuess();
       }
     } else if (e.key === "Backspace") {
+      e.preventDefault();
       setCurrentGuess((prevGuess) => prevGuess.slice(0, -1));
       return;
     } else if (/^[A-Za-z]$/.test(e.key)) {
