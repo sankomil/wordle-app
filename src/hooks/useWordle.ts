@@ -13,9 +13,6 @@ export const useWordle = () => {
   const [currentGuess, setCurrentGuess] = useState("");
   const [isCorrect, setIsCorrect] = useState(false);
 
-  const isGameOver = () => {
-    return turn + 1 === attempts || currentGuess === selectedWord;
-  };
   const validateCurrGuess = () => {
     let solArray = selectedWord.split("");
     let currGuessArray = currentGuess
@@ -39,9 +36,10 @@ export const useWordle = () => {
   };
 
   const addCurrGuess = () => {
-    if (isGameOver()) {
+    if (turn + 1 === attempts || currentGuess === selectedWord) {
       return;
     }
+    console.log(currentGuess, selectedWord);
     setGuesses((prev) => [...prev, validateCurrGuess()]);
     setTurn((prev) => prev + 1);
     setCurrentGuess("");
@@ -49,7 +47,7 @@ export const useWordle = () => {
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
-      if (currentGuess.length === 5 || currentGuess.length < 5) {
+      if (currentGuess.length !== 5) {
         return;
       } else {
         addCurrGuess();
@@ -65,8 +63,9 @@ export const useWordle = () => {
   };
 
   const handleButtonPress = (letter: string) => {
+    console.log("key press", letter);
     if (letter === "Enter") {
-      if (currentGuess.length === 5 || currentGuess.length < 5) {
+      if (currentGuess.length > 5 || currentGuess.length < 5) {
         return;
       } else {
         addCurrGuess();
