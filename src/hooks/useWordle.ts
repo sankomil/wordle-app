@@ -64,7 +64,22 @@ export const useWordle = () => {
     }
   };
 
-  const handleButtonPress = () => {};
+  const handleButtonPress = (letter: string) => {
+    if (letter === "Enter") {
+      if (currentGuess.length === 5 || currentGuess.length < 5) {
+        return;
+      } else {
+        addCurrGuess();
+      }
+    } else if (letter === "Delete") {
+      setCurrentGuess((prevGuess) => prevGuess.slice(0, -1));
+      return;
+    } else if (/^[A-Za-z]$/.test(letter)) {
+      if (currentGuess.length < 5) {
+        setCurrentGuess((prev) => prev + letter.toUpperCase());
+      }
+    }
+  };
   return {
     turn,
     currentGuess,
