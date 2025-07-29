@@ -5,7 +5,8 @@ export const useWordle = () => {
   const attempts = parseInt(process.env.REACT_APP_ATTEMPTS || "5");
   const wordList = JSON.parse(process.env.REACT_APP_WORDLE_LIST || "[]");
 
-  const selectedWord = wordList[Math.floor(Math.random() * wordList.length)];
+  const selectedWord =
+    wordList[Math.floor(Math.random() * wordList.length)].toUpperCase();
 
   const [guesses, setGuesses] = useState<ILetter[][]>([]);
 
@@ -14,25 +15,37 @@ export const useWordle = () => {
   const [isCorrect, setIsCorrect] = useState(false);
 
   const validateCurrGuess = () => {
-    let solArray = selectedWord.split("");
-    let currGuessArray = currentGuess
+    const solArray: (string | null)[] = selectedWord.split("");
+    const currGuessArray = currentGuess
       .split("")
       .map((l) => ({ value: l, status: "invalidated" } as ILetter));
-    currGuessArray.forEach((l, i) => {
-      if (solArray[i] === l.value) {
-        currGuessArray[i].status = "correct";
-        solArray[i] = null;
+
+    // Find correct letters (green)
+    const guessWithCorrect = currGuessArray.map((letterObj, i) => {
+      if (solArray[i] === letterObj.value) {
+        solArray[i] = null; // remove from pool
+        return { ...letterObj, status: "correct" } as ILetter;
       }
+      return letterObj;
     });
 
-    currGuessArray.forEach((l, i) => {
-      if (solArray.includes(l.value) && l.status !== "correct") {
-        currGuessArray[i].status = "misplaced";
-        solArray[solArray.indexOf(l.value)] = null;
+    // Find misplaced letters (yellow)
+    const finalValidatedGuess = guessWithCorrect.map((letterObj) => {
+      if (letterObj.status === "correct") {
+        return letterObj;
       }
+
+      const letterIndex = solArray.indexOf(letterObj.value);
+
+      if (letterIndex > -1) {
+        solArray[letterIndex] = null; // remove from pool
+        return { ...letterObj, status: "misplaced" } as ILetter;
+      }
+
+      return { ...letterObj, status: "incorrect" } as ILetter;
     });
 
-    return currGuessArray;
+    return finalValidatedGuess;
   };
 
   const addCurrGuess = () => {
@@ -40,7 +53,8 @@ export const useWordle = () => {
       return;
     }
     console.log(currentGuess, selectedWord);
-    setGuesses((prev) => [...prev, validateCurrGuess()]);
+    const currValidation = validateCurrGuess();
+    setGuesses((prev) => [...prev, currValidation]);
     setTurn((prev) => prev + 1);
     setCurrentGuess("");
   };
