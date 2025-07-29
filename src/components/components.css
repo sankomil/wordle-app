@@ -45,3 +45,12 @@
 #action {
   width: 100%;
 }
+
+.game-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  align-self: center;
+  justify-content: center;
+}
