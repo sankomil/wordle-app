@@ -55,22 +55,25 @@ export const useWordle = () => {
     const currValidation = validateCurrGuess();
     setGuesses((prev) => [...prev, currValidation]);
     setPreviousLetters((prev) => {
-      const result: { [key: string]: TLetterStatus } = {};
-
-      currValidation.forEach((l) => {
-        if (l.status === "correct") {
-          result[l.value] = "correct";
-        } else if (l.status === "misplaced" && prev[l.value] !== "correct") {
-          result[l.value] = "misplaced";
-        } else if (
-          l.status === "incorrect" &&
-          (prev[l.value] !== "correct" || prev[l.value] !== "misplaced")
-        ) {
-          result[l.value] = "incorrect";
+      const newPreviousLetters = { ...prev };
+      currValidation.forEach(({ status, value }) => {
+        const existingStatus = newPreviousLetters[value];
+        if (existingStatus === "correct") {
+          return;
         }
+        if (existingStatus === "misplaced" && status !== "correct") {
+          return;
+        }
+        if (
+          existingStatus === "incorrect" &&
+          status !== "correct" &&
+          status !== "misplaced"
+        ) {
+          return;
+        }
+        newPreviousLetters[value] = status;
       });
-
-      return { ...prev, ...result };
+      return newPreviousLetters;
     });
     setTurn((prev) => prev + 1);
     setCurrentGuess("");
