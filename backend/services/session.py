@@ -1,18 +1,17 @@
 from app import db
 from models import Session
-import random
-import os
+from datetime import datetime
 
 
 class SessionHandler:
-    def __init__(self, solution=None):
-        self.solution = solution
+    def __init__(self):
+        self.session_id = str(datetime.now().timetuple().tm_yday + datetime.now().year)
 
-    def create_session(self):
-        session = Session(solution=self.solution)
+    def fetch_session(self, solution):
+        session = self.fetch_session()
+        if session:
+            return session
+        session = Session(solution=solution, id=self.session_id)
         db.session.add(session)
         db.session.commit()
         return session
-
-    def fetch_session(self, session_id):
-        return Session.query.get(session_id)
