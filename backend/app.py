@@ -2,31 +2,37 @@ import random
 import os
 from flask import Flask, jsonify, request
 from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
 
 load_dotenv()
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+db = SQLAlchemy(app)
 
 WORD_POOL = os.getenv("WORD_POOL").split(',')
-SELECTED_WORD = random.choice(WORD_POOL).upper()
+SELECTED_WORD = random.choice(WORD_POOL).strip().upper()
 ATTEMPTS = int(os.getenv("ATTEMPTS"))
 
 turns = 0
 
 print(SELECTED_WORD, ATTEMPTS)
 
+
 @app.route("/validate", methods=["POST"])
 def validate_word():
     data = request.get_json()
     guess = data.get("guess").upper()
 
-    if not guess:
-        return jsonify({"error": "Guess not provided"}), 400
 
     if len(guess) != 5:
         return jsonify({"error": "The guess should be five letters long"}), 400
 
-    sol_array = list(SELECTED_WORD)
+    from services import SessionHandler
+
+    session = SessionHandler().fetch_session(solution=SELECTED_WORD)
+
+    sol_array = list(session.solution)
     validated_guess = [{"value": letter, "status": "invalidated"} for letter in guess]
 
     for i, letter_obj in enumerate(validated_guess):
@@ -57,4 +63,5 @@ def validate_word():
     })
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8080)
+    app.run(debug=True, port=5000)
+    
