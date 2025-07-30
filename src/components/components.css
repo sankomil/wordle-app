@@ -1,3 +1,24 @@
+@keyframes flip {
+  0% {
+    transform: rotateX(0);
+    border-color: #333;
+  }
+  45% {
+    transform: rotateX(90deg);
+    border-color: #333;
+  }
+  55% {
+    transform: rotateX(90deg);
+    background: rgb(var(--bg-color));
+    border-color: rgb(var(--bg-color));
+  }
+  100% {
+    transform: rotateX(0);
+    background: rgb(var(--bg-color));
+    border-color: rgb(var(--bg-color));
+  }
+}
+
 .letter {
   color: white;
   font-size: 45px;
@@ -13,27 +34,40 @@
 }
 .letter.letter-status-correct,
 .key.key-correct {
-  background-color: rgb(88, 163, 81);
-  border-color: rgb(88, 163, 81);
   --bg-color: 88, 163, 81;
+  animation: flip 0.6s ease forwards;
 }
 
 .letter.letter-status-misplaced,
 .key.key-misplaced {
-  background-color: rgb(181, 159, 59);
-  border-color: rgb(181, 159, 59);
   --bg-color: 181, 159, 59;
+  animation: flip 0.6s ease forwards;
 }
 
 .letter.letter-status-incorrect,
 .key.key-incorrect {
-  background-color: rgb(58, 58, 60);
-  border-color: rgb(58, 58, 60);
   --bg-color: 58, 58, 60;
+  animation: flip 0.6s ease forwards;
 }
 
 .word {
   display: flex;
+}
+
+.word > .letter:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.word > .letter:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.word > .letter:nth-child(4) {
+  animation-delay: 0.6s;
+}
+
+.word > .letter:nth-child(5) {
+  animation-delay: 0.8s;
 }
 
 .key-row {
