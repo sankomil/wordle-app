@@ -1,15 +1,50 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { Keypad, GameBoard } from "./components";
+import "./App.css";
+import { useWordle } from "./hooks";
 
 function App() {
-  const attempts = parseInt(process.env.REACT_APP_ATTEMPTS || "5");
-  const wordList = JSON.parse(process.env.REACT_APP_WORDLE_LIST || "[]");
+  const {
+    currentGuess,
+    attempts,
+    handleButtonPress,
+    handleKeyPress,
+    turn,
+    guesses,
+    previousLetters,
+    gameOver,
+    selectedWord,
+  } = useWordle();
 
-  const selectedWord = wordList[Math.floor(Math.random() * wordList.length)];
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [handleKeyPress]);
 
   return (
     <div className="App">
-      <h1>Wordle</h1>
-      <p>Number of attempts: {attempts}</p>
+      <div className="game-space">
+        <div className="game-message">
+          {gameOver.isOver ? (
+            gameOver.isVictory ? (
+              <div className="victory-overlay"></div>
+            ) : (
+              <div className="lose-state">{selectedWord}</div>
+            )
+          ) : null}
+        </div>
+        <GameBoard
+          currentGuess={currentGuess}
+          turn={turn}
+          attempts={attempts}
+          guesses={guesses}
+        />
+        <Keypad
+          handleButtonPress={handleButtonPress}
+          previousLetters={previousLetters}
+        />
+      </div>
     </div>
   );
 }
