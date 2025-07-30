@@ -53,6 +53,7 @@
   text-align: center;
   line-height: 40px;
   cursor: pointer;
+  font-weight: bold;
 }
 .key:hover {
   background-color: rgba(var(--bg-color), 0.7);
