@@ -2,18 +2,23 @@ import random
 import os
 from flask import Flask, jsonify, request
 from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
 
 load_dotenv()
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+db = SQLAlchemy(app)
 
 WORD_POOL = os.getenv("WORD_POOL").split(',')
-SELECTED_WORD = random.choice(WORD_POOL).upper()
+SELECTED_WORD = random.choice(WORD_POOL).strip().upper()
 ATTEMPTS = int(os.getenv("ATTEMPTS"))
 
 turns = 0
 
 print(SELECTED_WORD, ATTEMPTS)
+
+
 
 @app.route("/validate", methods=["POST"])
 def validate_word():
@@ -57,4 +62,5 @@ def validate_word():
     })
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8080)
+    app.run(debug=True, port=5000)
+    
