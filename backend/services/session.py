@@ -8,7 +8,7 @@ class SessionHandler:
         self.session_id = str(datetime.now().timetuple().tm_yday + datetime.now().year)
 
     def fetch_session(self, solution):
-        session = self.fetch_session()
+        session = Session.query.get(self.session_id)
         if session:
             return session
         session = Session(solution=solution, id=self.session_id)
