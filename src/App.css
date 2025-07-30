@@ -8,6 +8,14 @@
   align-items: center;
   justify-content: flex-start;
 }
+.victory-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
 
 .game-space {
   align-items: center;
