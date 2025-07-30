@@ -1,6 +1,12 @@
+export type TLetterStatus =
+  | "correct"
+  | "misplaced"
+  | "incorrect"
+  | "invalidated";
+
 export interface ILetter {
   value: string;
-  status: "correct" | "misplaced" | "incorrect" | "invalidated";
+  status: TLetterStatus;
 }
 
 export interface IGameBoard {
@@ -12,4 +18,5 @@ export interface IGameBoard {
 
 export interface IKeypad {
   handleButtonPress: (val: string) => void;
+  previousLetters: { [key: string]: TLetterStatus };
 }
