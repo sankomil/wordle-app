@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { ILetter, TLetterStatus } from "../types";
 
-export const useWordle = () => {
+export const useWordle = (selectedWord: string) => {
   const attempts = parseInt(process.env.REACT_APP_ATTEMPTS || "5");
   const wordList = JSON.parse(process.env.REACT_APP_WORDLE_LIST || "[]");
-
-  const selectedWord =
-    wordList[Math.floor(Math.random() * wordList.length)].toUpperCase();
 
   const [guesses, setGuesses] = useState<ILetter[][]>([]);
 
@@ -15,6 +12,8 @@ export const useWordle = () => {
   const [previousLetters, setPreviousLetters] = useState<{
     [key: string]: TLetterStatus;
   }>({});
+
+  console.log("test", selectedWord);
 
   const [gameOver, setGameOver] = useState({ isOver: false, isVictory: false });
 
@@ -85,6 +84,9 @@ export const useWordle = () => {
   };
 
   const handleKeyPress = (e: KeyboardEvent) => {
+    if (gameOver.isOver) {
+      return;
+    }
     if (e.key === "Enter") {
       if (currentGuess.length !== 5) {
         return;
@@ -103,7 +105,9 @@ export const useWordle = () => {
   };
 
   const handleButtonPress = (letter: string) => {
-    console.log("key press", letter);
+    if (gameOver.isOver) {
+      return;
+    }
     if (letter === "Enter") {
       if (currentGuess.length > 5 || currentGuess.length < 5) {
         return;

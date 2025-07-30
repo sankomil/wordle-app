@@ -1,9 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Keypad, GameBoard } from "./components";
 import "./App.css";
 import { useWordle } from "./hooks";
 
 function App() {
+  const [selectedWord, setSelectedWord] = useState<string>("");
+
+  useEffect(() => {
+    const wordList = JSON.parse(process.env.REACT_APP_WORDLE_LIST || "[]");
+    setSelectedWord(
+      wordList[Math.floor(Math.random() * wordList.length)].toUpperCase()
+    );
+  }, [setSelectedWord]);
+
   const {
     currentGuess,
     attempts,
@@ -13,8 +22,7 @@ function App() {
     guesses,
     previousLetters,
     gameOver,
-    selectedWord,
-  } = useWordle();
+  } = useWordle(selectedWord);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyPress);
