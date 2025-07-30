@@ -25,7 +25,7 @@ export const GameBoard = ({
         if (i < turn) {
           return <Word word={guesses[i]} />;
         } else if (i === turn) {
-          return <Word key={`${i}`} word={currGuessRow} />;
+          return <Word key={`${i}`} word={currGuessRow} isCurrentGuess />;
         } else {
           return (
             <Word

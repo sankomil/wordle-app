@@ -4,7 +4,7 @@ import { ILetter } from "../types";
 
 export const Letter = ({ value, status }: ILetter) => {
   return (
-    <div className={`letter letter-status-${status}`}>
+    <div className={`letter letter-status-${status} ${value ? "entered" : ""}`}>
       {value.toUpperCase()}
     </div>
   );
