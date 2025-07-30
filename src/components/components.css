@@ -13,6 +13,17 @@
   border-radius: 10%;
   margin: 2.5px;
 }
+.letter.letter-status-correct {
+  background-color: #58a351;
+}
+
+.letter.letter-status-misplaced {
+  background-color: #b59f3b;
+}
+
+.letter.letter-status-incorrect {
+  background-color: #3a3a3c;
+}
 
 .word {
   display: flex;
