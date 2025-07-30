@@ -6,8 +6,12 @@ import { ILetter } from "../types";
 export const Word = ({ word }: { word: ILetter[] }) => {
   return (
     <div className="word">
-      {word.map((letter) => (
-        <Letter value={letter.value} status={letter.status} />
+      {word.map((letter, i) => (
+        <Letter
+          key={letter.value + i}
+          value={letter.value}
+          status={letter.status}
+        />
       ))}
     </div>
   );
