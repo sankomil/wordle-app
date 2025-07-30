@@ -14,17 +14,20 @@
 }
 .letter.letter-status-correct,
 .key.key-correct {
-  background-color: #58a351;
+  background-color: rgb(88, 163, 81);
+  --bg-color: 88, 163, 81;
 }
 
 .letter.letter-status-misplaced,
 .key.key-misplaced {
-  background-color: #b59f3b;
+  background-color: rgb(181, 159, 59);
+  --bg-color: 181, 159, 59;
 }
 
 .letter.letter-status-incorrect,
 .key.key-incorrect {
-  background-color: #3a3a3c;
+  background-color: rgb(58, 58, 60);
+  --bg-color: 58, 58, 60;
 }
 
 .word {
@@ -44,6 +47,7 @@
   height: 40px;
   padding: 0 5px;
   background-color: grey;
+  --bg-color: 128, 128, 128;
   border-radius: 10%;
   display: inline-block;
   text-align: center;
@@ -51,7 +55,7 @@
   cursor: pointer;
 }
 .key:hover {
-  background-color: rgba(128, 128, 128, 0.5);
+  background-color: rgba(var(--bg-color), 0.7);
 }
 
 #action {
