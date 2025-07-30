@@ -15,7 +15,32 @@
   height: 100%;
   width: 100%;
 }
+@keyframes slideIn {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
 
+.game-message {
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lose-state {
+  background-color: white;
+  color: black;
+  padding: 5px;
+  font-size: 18px;
+  border-radius: 10%;
+  animation: slideIn 0.5s ease;
+}
 
 .game-space {
   align-items: center;
