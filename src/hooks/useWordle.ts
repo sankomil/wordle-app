@@ -84,6 +84,9 @@ export const useWordle = (selectedWord: string) => {
   };
 
   const handleKeyPress = (e: KeyboardEvent) => {
+    if (gameOver.isOver) {
+      return;
+    }
     if (e.key === "Enter") {
       if (currentGuess.length !== 5) {
         return;
@@ -102,7 +105,9 @@ export const useWordle = (selectedWord: string) => {
   };
 
   const handleButtonPress = (letter: string) => {
-    console.log("key press", letter);
+    if (gameOver.isOver) {
+      return;
+    }
     if (letter === "Enter") {
       if (currentGuess.length > 5 || currentGuess.length < 5) {
         return;
