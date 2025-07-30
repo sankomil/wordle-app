@@ -18,7 +18,11 @@ turns = 0
 
 print(SELECTED_WORD, ATTEMPTS)
 
-
+@app.route("/create-session", methods=["POST"])
+def create_session():
+    from services import SessionHandler
+    session = SessionHandler(SELECTED_WORD).create_session()
+    return jsonify({"id":session.id})
 
 @app.route("/validate", methods=["POST"])
 def validate_word():
