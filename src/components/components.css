@@ -7,26 +7,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid grey;
+  border: 2px solid rgba(128, 128, 128, 0.5);
   text-align: center;
-  border-radius: 10%;
   margin: 2.5px;
 }
 .letter.letter-status-correct,
 .key.key-correct {
   background-color: rgb(88, 163, 81);
+  border-color: rgb(88, 163, 81);
   --bg-color: 88, 163, 81;
 }
 
 .letter.letter-status-misplaced,
 .key.key-misplaced {
   background-color: rgb(181, 159, 59);
+  border-color: rgb(181, 159, 59);
   --bg-color: 181, 159, 59;
 }
 
 .letter.letter-status-incorrect,
 .key.key-incorrect {
   background-color: rgb(58, 58, 60);
+  border-color: rgb(58, 58, 60);
   --bg-color: 58, 58, 60;
 }
 
