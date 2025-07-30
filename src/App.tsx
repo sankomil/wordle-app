@@ -24,16 +24,16 @@ function App() {
 
   return (
     <div className="App">
+      <div className="game-message">
+        {gameOver.isOver ? (
+          gameOver.isVictory ? (
+            <div className="victory-overlay"></div>
+          ) : (
+            <div className="lose-state">{selectedWord}</div>
+          )
+        ) : null}
+      </div>
       <div className="game-space">
-        <div className="game-message">
-          {gameOver.isOver ? (
-            gameOver.isVictory ? (
-              <div className="victory-overlay"></div>
-            ) : (
-              <div className="lose-state">{selectedWord}</div>
-            )
-          ) : null}
-        </div>
         <GameBoard
           currentGuess={currentGuess}
           turn={turn}
