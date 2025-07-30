@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ILetter } from "../types";
+import { ILetter, TLetterStatus } from "../types";
 
 export const useWordle = () => {
   const attempts = parseInt(process.env.REACT_APP_ATTEMPTS || "5");
@@ -12,7 +12,9 @@ export const useWordle = () => {
 
   const [turn, setTurn] = useState(0);
   const [currentGuess, setCurrentGuess] = useState("");
-  const [isCorrect, setIsCorrect] = useState(false);
+  const [previousLetters, setPreviousLetters] = useState<{
+    [key: string]: TLetterStatus;
+  }>({});
 
   const validateCurrGuess = () => {
     const solArray: (string | null)[] = selectedWord.split("");
@@ -20,16 +22,14 @@ export const useWordle = () => {
       .split("")
       .map((l) => ({ value: l, status: "invalidated" }));
 
-    // Find correct letters (green)
     const guessWithCorrect: ILetter[] = currGuessArray.map((letterObj, i) => {
       if (solArray[i] === letterObj.value) {
-        solArray[i] = null; // remove from pool
+        solArray[i] = null;
         return { ...letterObj, status: "correct" };
       }
       return letterObj;
     });
 
-    // Find misplaced letters (yellow)
     const finalValidatedGuess: ILetter[] = guessWithCorrect.map((letterObj) => {
       if (letterObj.status === "correct") {
         return letterObj;
@@ -38,7 +38,7 @@ export const useWordle = () => {
       const letterIndex = solArray.indexOf(letterObj.value);
 
       if (letterIndex > -1) {
-        solArray[letterIndex] = null; // remove from pool
+        solArray[letterIndex] = null;
         return { ...letterObj, status: "misplaced" };
       }
 
@@ -54,6 +54,27 @@ export const useWordle = () => {
     }
     const currValidation = validateCurrGuess();
     setGuesses((prev) => [...prev, currValidation]);
+    setPreviousLetters((prev) => {
+      const newPreviousLetters = { ...prev };
+      currValidation.forEach(({ status, value }) => {
+        const existingStatus = newPreviousLetters[value];
+        if (existingStatus === "correct") {
+          return;
+        }
+        if (existingStatus === "misplaced" && status !== "correct") {
+          return;
+        }
+        if (
+          existingStatus === "incorrect" &&
+          status !== "correct" &&
+          status !== "misplaced"
+        ) {
+          return;
+        }
+        newPreviousLetters[value] = status;
+      });
+      return newPreviousLetters;
+    });
     setTurn((prev) => prev + 1);
     setCurrentGuess("");
   };
@@ -100,5 +121,6 @@ export const useWordle = () => {
     handleKeyPress,
     handleButtonPress,
     attempts,
+    previousLetters,
   };
 };
