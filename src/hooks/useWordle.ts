@@ -16,6 +16,8 @@ export const useWordle = () => {
     [key: string]: TLetterStatus;
   }>({});
 
+  const [gameOver, setGameOver] = useState({ isOver: false, isVictory: false });
+
   const validateCurrGuess = () => {
     const solArray: (string | null)[] = selectedWord.split("");
     const currGuessArray: ILetter[] = currentGuess
@@ -50,7 +52,10 @@ export const useWordle = () => {
 
   const addCurrGuess = () => {
     if (turn + 1 === attempts || currentGuess === selectedWord) {
-      return;
+      setGameOver({
+        isOver: true,
+        isVictory: currentGuess === selectedWord && turn + 1 < attempts,
+      });
     }
     const currValidation = validateCurrGuess();
     setGuesses((prev) => [...prev, currValidation]);
@@ -122,5 +127,7 @@ export const useWordle = () => {
     handleButtonPress,
     attempts,
     previousLetters,
+    gameOver,
+    selectedWord,
   };
 };
