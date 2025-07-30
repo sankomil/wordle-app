@@ -9,3 +9,7 @@ export interface IGameBoard {
   guesses: ILetter[][];
   currentGuess: string;
 }
+
+export interface IKeypad {
+  handleButtonPress: (val: string) => void;
+}

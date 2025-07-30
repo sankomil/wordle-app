@@ -1,11 +1,8 @@
 import React from "react";
 import "./components.css";
+import { IKeypad } from "../types";
 
-export const Keypad = ({
-  handleButtonPress,
-}: {
-  handleButtonPress: (val: string) => void;
-}) => {
+export const Keypad = ({ handleButtonPress }: IKeypad) => {
   const firstRow = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"];
   const secondRow = ["A", "S", "D", "F", "G", "H", "J", "K", "L"];
   const thirdRow = ["Delete", "Z", "X", "C", "V", "B", "N", "M", "Enter"];
