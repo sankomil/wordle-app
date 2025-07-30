@@ -18,24 +18,21 @@ turns = 0
 
 print(SELECTED_WORD, ATTEMPTS)
 
-@app.route("/create-session", methods=["POST"])
-def create_session():
-    from services import SessionHandler
-    session = SessionHandler(SELECTED_WORD).create_session()
-    return jsonify({"id":session.id})
 
 @app.route("/validate", methods=["POST"])
 def validate_word():
     data = request.get_json()
     guess = data.get("guess").upper()
 
-    if not guess:
-        return jsonify({"error": "Guess not provided"}), 400
 
     if len(guess) != 5:
         return jsonify({"error": "The guess should be five letters long"}), 400
 
-    sol_array = list(SELECTED_WORD)
+    from services import SessionHandler
+
+    session = SessionHandler().fetch_session(solution=SELECTED_WORD)
+
+    sol_array = list(session.solution)
     validated_guess = [{"value": letter, "status": "invalidated"} for letter in guess]
 
     for i, letter_obj in enumerate(validated_guess):
