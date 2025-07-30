@@ -3,9 +3,15 @@ import "./components.css";
 import { Letter } from "./Letter";
 import { ILetter } from "../types";
 
-export const Word = ({ word }: { word: ILetter[] }) => {
+export const Word = ({
+  word,
+  isCurrentGuess,
+}: {
+  word: ILetter[];
+  isCurrentGuess?: boolean;
+}) => {
   return (
-    <div className="word">
+    <div className="word" id={isCurrentGuess ? "current" : ""}>
       {word.map((letter, i) => (
         <Letter
           key={letter.value + i}
