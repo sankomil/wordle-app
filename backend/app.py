@@ -1,6 +1,6 @@
 import random
 import os
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 
@@ -20,13 +20,21 @@ ATTEMPTS = int(os.getenv("ATTEMPTS"))
 print(SELECTED_WORD, ATTEMPTS)
 
 
+@app.after_request
+def after_request(response):
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+    response.headers.add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS")
+    return response
+
+
 @app.route("/validate", methods=["POST"])
 def validate_word():
     data = request.get_json()
     guess = data.get("guess").upper()
     turn = data.get("turn")
 
-    if not guess or not turn:
+    if not guess or turn == None:
         return jsonify({"error": "Missing required fields"}), 400
 
     if len(guess) != 5:
