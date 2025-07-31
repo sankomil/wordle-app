@@ -4,15 +4,6 @@ import "./App.css";
 import { useWordle } from "./hooks";
 
 function App() {
-  const [selectedWord, setSelectedWord] = useState<string>("");
-
-  useEffect(() => {
-    const wordList = JSON.parse(process.env.REACT_APP_WORDLE_LIST || "[]");
-    setSelectedWord(
-      wordList[Math.floor(Math.random() * wordList.length)].toUpperCase()
-    );
-  }, [setSelectedWord]);
-
   const {
     currentGuess,
     attempts,
@@ -22,7 +13,8 @@ function App() {
     guesses,
     previousLetters,
     gameOver,
-  } = useWordle(selectedWord);
+    solution,
+  } = useWordle();
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyPress);
@@ -37,7 +29,7 @@ function App() {
           gameOver.isVictory ? (
             <div className="victory-overlay"></div>
           ) : (
-            <div className="lose-state">{selectedWord}</div>
+            <div className="lose-state">{solution}</div>
           )
         ) : null}
       </div>
