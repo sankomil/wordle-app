@@ -13,10 +13,14 @@ export const validateInput = async ({
   let err: AxiosError | null = null;
 
   await axiosInstance
-    .post("/validate", {
-      guess,
-      turn,
-    })
+    .post(
+      "/validate",
+      {
+        guess,
+        turn,
+      },
+      { withCredentials: true }
+    )
     .then((response: AxiosResponse<any, any>) => {
       res = response.data;
     })

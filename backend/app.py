@@ -1,32 +1,51 @@
+from datetime import datetime, timedelta
 import random
 import os
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request, session
 from dotenv import load_dotenv
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+from flask_session import Session
 
-from helpers import validate_string
+from helpers import validate_string, update_word_pool
 
 load_dotenv()
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 db = SQLAlchemy(app)
+
+app.config['SESSION_TYPE'] = 'sqlalchemy'
+app.config['SESSION_SQLALCHEMY'] = db
+app.config['SESSION_COOKIE_PARTITIONED'] = True
+
+
+Session(app)
+frontend_url = os.getenv("FRONTEND_URL")
+
+CORS(app, supports_credentials=True, origins=[frontend_url])
 
 WORD_POOL = os.getenv("WORD_POOL").split(',')
 SELECTED_WORD = random.choice(WORD_POOL).strip().upper()
 ATTEMPTS = int(os.getenv("ATTEMPTS"))
 
 
-print(SELECTED_WORD, ATTEMPTS)
-
 
 @app.after_request
 def after_request(response):
-    response.headers.add("Access-Control-Allow-Origin", "*")
     response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
     response.headers.add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS")
     return response
 
+
+@app.before_request
+def set_session_expiry_to_end_of_day():
+    session.permanent = True
+    now = datetime.now()
+    midnight = (now + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+    remaining = (midnight - now)
+    app.permanent_session_lifetime = remaining
 
 @app.route("/validate", methods=["POST"])
 def validate_word():
@@ -40,15 +59,21 @@ def validate_word():
     if len(guess) != 5:
         return jsonify({"error": "The guess should be five letters long"}), 400
 
-    from services import SessionHandler
+    possible_words = session.get("possible_words")
+    if not possible_words:
+        possible_words = WORD_POOL
+    
+    if len(possible_words) > 1:
+        possible_words = update_word_pool(possible_words, guess)
 
-    session = SessionHandler().fetch_session(solution=SELECTED_WORD)
+    validation = validate_string(guess=guess, solution=possible_words[0])
+    session['possible_words'] = possible_words
 
-    validated_guess = validate_string(guess=guess, solution=session.solution)
+    return_sol = random.choice(possible_words) if (len(possible_words) == 1 and possible_words[0] == guess) or turn+1 == ATTEMPTS else ""
     
     return jsonify({
-        "validated_guess": validated_guess,
-        "solution": session.solution if int(turn) + 1 == ATTEMPTS or session.solution == guess else ""
+        "validated_guess": validation,
+        "solution": return_sol
     })
 
 if __name__ == "__main__":
