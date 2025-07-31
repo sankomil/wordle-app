@@ -2,60 +2,24 @@ import { useState } from "react";
 import { ILetter, TLetterStatus } from "../types";
 import { validateInput } from "../helpers";
 
-export const useWordle = (selectedWord: string) => {
+export const useWordle = () => {
   const attempts = parseInt(process.env.REACT_APP_ATTEMPTS || "5");
-  const wordList = JSON.parse(process.env.REACT_APP_WORDLE_LIST || "[]");
 
   const [guesses, setGuesses] = useState<ILetter[][]>([]);
-
+  const [solution, setSolution] = useState<string>("");
   const [turn, setTurn] = useState(0);
   const [currentGuess, setCurrentGuess] = useState("");
   const [previousLetters, setPreviousLetters] = useState<{
     [key: string]: TLetterStatus;
   }>({});
 
-  console.log("test", selectedWord);
-
   const [gameOver, setGameOver] = useState({ isOver: false, isVictory: false });
-
-  const validateCurrGuess = () => {
-    const solArray: (string | null)[] = selectedWord.split("");
-    const currGuessArray: ILetter[] = currentGuess
-      .split("")
-      .map((l) => ({ value: l, status: "invalidated" }));
-
-    const guessWithCorrect: ILetter[] = currGuessArray.map((letterObj, i) => {
-      if (solArray[i] === letterObj.value) {
-        solArray[i] = null;
-        return { ...letterObj, status: "correct" };
-      }
-      return letterObj;
-    });
-
-    const finalValidatedGuess: ILetter[] = guessWithCorrect.map((letterObj) => {
-      if (letterObj.status === "correct") {
-        return letterObj;
-      }
-
-      const letterIndex = solArray.indexOf(letterObj.value);
-
-      if (letterIndex > -1) {
-        solArray[letterIndex] = null;
-        return { ...letterObj, status: "misplaced" };
-      }
-
-      return { ...letterObj, status: "incorrect" };
-    });
-
-    return finalValidatedGuess;
-  };
 
   const addCurrGuess = async () => {
     const { res, err } = await validateInput({
       guess: currentGuess,
       turn: turn,
     });
-    console.log("sfdsf", res, err);
 
     if (err) {
       return;
@@ -94,6 +58,7 @@ export const useWordle = (selectedWord: string) => {
     });
     setTurn((prev) => prev + 1);
     setCurrentGuess("");
+    setSolution(res.solution);
   };
 
   const handleKeyPress = (e: KeyboardEvent) => {
@@ -145,6 +110,6 @@ export const useWordle = (selectedWord: string) => {
     attempts,
     previousLetters,
     gameOver,
-    selectedWord,
+    solution,
   };
 };
