@@ -25,7 +25,7 @@ export const useWordle = () => {
       return;
     }
 
-    if (turn + 1 == attempts || currentGuess === res.solution) {
+    if (turn + 1 === attempts || currentGuess === res.solution) {
       setGameOver({
         isOver: true,
         isVictory: currentGuess === res.solution && turn + 1 <= attempts,

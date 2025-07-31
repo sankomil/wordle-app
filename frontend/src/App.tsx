@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Keypad, GameBoard } from "./components";
 import "./App.css";
 import { useWordle } from "./hooks";
