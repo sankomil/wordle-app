@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 import random
 import os
 from flask import Flask, jsonify, request, session
@@ -38,6 +39,14 @@ def after_request(response):
     return response
 
 
+@app.before_request
+def set_session_expiry_to_end_of_day():
+    session.permanent = True
+    now = datetime.now()
+    midnight = (now + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+    remaining = (midnight - now)
+    app.permanent_session_lifetime = remaining
+
 @app.route("/validate", methods=["POST"])
 def validate_word():
     data = request.get_json()
@@ -60,7 +69,7 @@ def validate_word():
     validation = validate_string(guess=guess, solution=possible_words[0])
     session['possible_words'] = possible_words
 
-    return_sol = possible_words[0] if (len(possible_words) == 1 and possible_words[0] == guess) or turn+1 == ATTEMPTS else ""
+    return_sol = random.choice(possible_words) if (len(possible_words) == 1 and possible_words[0] == guess) or turn+1 == ATTEMPTS else ""
     
     return jsonify({
         "validated_guess": validation,
