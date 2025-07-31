@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ILetter, TLetterStatus } from "../types";
+import { validateInput } from "../helpers";
 
 export const useWordle = (selectedWord: string) => {
   const attempts = parseInt(process.env.REACT_APP_ATTEMPTS || "5");
@@ -49,14 +50,26 @@ export const useWordle = (selectedWord: string) => {
     return finalValidatedGuess;
   };
 
-  const addCurrGuess = () => {
-    if (turn + 1 === attempts || currentGuess === selectedWord) {
+  const addCurrGuess = async () => {
+    const { res, err } = await validateInput({
+      guess: currentGuess,
+      turn: turn,
+    });
+    console.log("sfdsf", res, err);
+
+    if (err) {
+      return;
+    }
+
+    if (turn + 1 == attempts || currentGuess === res.solution) {
       setGameOver({
         isOver: true,
-        isVictory: currentGuess === selectedWord && turn + 1 < attempts,
+        isVictory: currentGuess === res.solution && turn + 1 <= attempts,
       });
     }
-    const currValidation = validateCurrGuess();
+
+    const currValidation = res.validated_guess;
+
     setGuesses((prev) => [...prev, currValidation]);
     setPreviousLetters((prev) => {
       const newPreviousLetters = { ...prev };
