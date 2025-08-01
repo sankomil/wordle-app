@@ -38,4 +38,14 @@ My third improvement was adding a shudder on error. When the user enters a word 
 
 ## Trade-off
 
-Currently my gamestate is all stored on the server-side - thus making the process of updating gamestate on page refresh/open a little slower. This is because of the possible number of attempts that can be added. The localStorage has a limitation that, as I understand, is different from browser to browser. Furthermore, storing large amounts of data in localStorage can slow down the browser, which also made it unsuitable as a potential option for storing game state. While this would be a satisfactory solution if the number of attempts was fixed and limited - as is the case for NYT Wordle - the possibility of the attempts being flexible made me consider server side storage as a more suitable solution 
+Currently my gamestate is all stored on the server-side - thus making the process of updating gamestate on page refresh/open a little slower. This is because of the possible number of attempts that can be added. The localStorage has a limitation that, as I understand, is different from browser to browser. Furthermore, storing large amounts of data in localStorage can slow down the browser, which also made it unsuitable as a potential option for storing game state. While this would be a satisfactory solution if the number of attempts was fixed and limited - as is the case for NYT Wordle - the possibility of the attempts being flexible made me consider server side storage as a more suitable solution
+
+## Future enhancements
+The following are improvements I'd like to make the project:
+
+- Enhanced responsiveness: Currently the application is best suited for desktop browsers. I would want to use Bootstrap to make the implementation easier - though it does constrain the styling
+- CI/CD pipeline:
+    - Github workflows: Setup a Github workflow to run on a new release. This would build and deploy the solution to the hosting portal of choice.
+        - I have not implemented this currently because it woul not be possible to test this solution with my current implementation - with my DB running locally. Furthermore, it would incur hosting charges.
+    - Containerize the solution: Create a docker-compose and Dockerfile for the solutions to make them easily hostable, tying back into the previous point. I had issues testing this, as my DB is hosted locally, which does not work well on Docker (`host.docker.internal` is not automatically available on Linux systems, it is needed to make localhost ports available inside docker image).
+- Testing: Currently the project has no testing. I would want to implement this for better coverage, as well as also use it for further maintainability. As more developers are added to the project, code quality and integration will become extremely important. Thus testing would be necessary
