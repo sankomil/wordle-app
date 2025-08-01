@@ -14,6 +14,7 @@ function App() {
     previousLetters,
     gameOver,
     solution,
+    fetchSession,
   } = useWordle();
 
   useEffect(() => {
@@ -21,6 +22,12 @@ function App() {
 
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, [handleKeyPress]);
+
+  useEffect(() => {
+    (async () => {
+      fetchSession();
+    })();
+  }, []);
 
   return (
     <div className="App">
