@@ -13,3 +13,11 @@ export interface IValidateInputResponse {
   };
   err: AxiosError | null;
 }
+
+export interface IGetSessionResponse {
+  res: {
+    solution: string;
+    guesses: ILetter[][];
+  }
+  err: AxiosError | null;
+}
