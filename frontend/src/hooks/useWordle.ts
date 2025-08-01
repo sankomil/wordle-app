@@ -12,6 +12,7 @@ export const useWordle = () => {
   const [previousLetters, setPreviousLetters] = useState<{
     [key: string]: TLetterStatus;
   }>({});
+  const [error, setError] = useState<string>("");
 
   const [gameOver, setGameOver] = useState({ isOver: false, isVictory: false });
 
@@ -19,6 +20,14 @@ export const useWordle = () => {
     const { res, err } = await getSession();
 
     if (err) {
+      if (err.response) {
+        setError(err.response.data as string);
+      } else {
+        setError(err.message);
+      }
+      setTimeout(() => {
+        setError("");
+      }, 5000);
       return;
     }
 
@@ -75,6 +84,14 @@ export const useWordle = () => {
     });
 
     if (err) {
+      if (err.response) {
+        setError(err.response.data as string);
+      } else {
+        setError(err.message);
+      }
+      setTimeout(() => {
+        setError("");
+      }, 5000);
       return;
     }
 
@@ -165,5 +182,6 @@ export const useWordle = () => {
     gameOver,
     solution,
     fetchSession,
+    error,
   };
 };
