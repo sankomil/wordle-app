@@ -109,8 +109,15 @@ With both projects up and running you are now free to explore the application. T
 
 README under the frontend and backend folder discuss each task and implementation ideology in further detail.
 
+## Docker
+This project also supports containerization. Make sure that the `.env` files are filled out correctly in both frontend and backend folders. Then in your terminal:
 
+```shell
+cd wordle-app
+docker compose up --build
+```
 
+If you are running this on Linux, you may need to use the `sudo` command.
 
 ## Future enhancements
 The following are improvements I'd like to make the project:

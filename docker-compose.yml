@@ -1,0 +1,11 @@
+services:
+  backend:
+    build: ./backend
+    network_mode: "host"
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
