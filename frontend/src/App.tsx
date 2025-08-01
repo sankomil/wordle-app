@@ -15,6 +15,7 @@ function App() {
     gameOver,
     solution,
     fetchSession,
+    error,
   } = useWordle();
 
   useEffect(() => {
@@ -38,7 +39,9 @@ function App() {
           ) : (
             <div className="lose-state">{solution}</div>
           )
-        ) : null}
+        ) : (
+          error && <div className="error-state">{error}</div>
+        )}
       </div>
       <div className="game-space">
         <GameBoard

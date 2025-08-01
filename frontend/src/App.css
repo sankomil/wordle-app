@@ -33,13 +33,19 @@
   align-items: center;
 }
 
-.lose-state {
+.lose-state,
+.error-state {
   background-color: white;
   color: black;
   padding: 5px;
   font-size: 18px;
   border-radius: 10%;
   animation: slideIn 0.5s ease;
+}
+
+.error-state {
+  background-color: #e64848;
+  color: white;
 }
 
 .game-space {
