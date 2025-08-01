@@ -14,6 +14,7 @@ export interface IGameBoard {
   turn: number;
   guesses: ILetter[][];
   currentGuess: string;
+  error: string;
 }
 
 export interface IKeypad {

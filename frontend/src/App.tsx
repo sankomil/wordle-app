@@ -14,6 +14,8 @@ function App() {
     previousLetters,
     gameOver,
     solution,
+    fetchSession,
+    error,
   } = useWordle();
 
   useEffect(() => {
@@ -21,6 +23,12 @@ function App() {
 
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, [handleKeyPress]);
+
+  useEffect(() => {
+    (async () => {
+      fetchSession();
+    })();
+  }, []);
 
   return (
     <div className="App">
@@ -31,7 +39,9 @@ function App() {
           ) : (
             <div className="lose-state">{solution}</div>
           )
-        ) : null}
+        ) : (
+          error && <div className="error-state">{error}</div>
+        )}
       </div>
       <div className="game-space">
         <GameBoard
@@ -39,6 +49,7 @@ function App() {
           turn={turn}
           attempts={attempts}
           guesses={guesses}
+          error={error}
         />
         <Keypad
           handleButtonPress={handleButtonPress}
