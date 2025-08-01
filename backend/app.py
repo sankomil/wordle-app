@@ -27,7 +27,7 @@ frontend_url = os.getenv("FRONTEND_URL")
 CORS(app, supports_credentials=True, origins=[frontend_url])
 
 WORD_POOL = os.getenv("WORD_POOL").split(',')
-SELECTED_WORD = random.choice(WORD_POOL).strip().upper()
+WORD_POOL = [word.strip().upper() for word in WORD_POOL]
 ATTEMPTS = int(os.getenv("ATTEMPTS"))
 
 
@@ -59,17 +59,21 @@ def validate_word():
     if len(guess) != 5:
         return jsonify({"error": "The guess should be five letters long"}), 400
 
-    possible_words = session.get("possible_words")
-    if not possible_words:
-        possible_words = WORD_POOL
+    possible_words = session.get("possible_words", WORD_POOL)
+    previous_guesses = session.get("previous_guesses", [])
     
     if len(possible_words) > 1:
         possible_words = update_word_pool(possible_words, guess)
 
     validation = validate_string(guess=guess, solution=possible_words[0])
-    session['possible_words'] = possible_words
+    previous_guesses.append(validation)
 
-    return_sol = random.choice(possible_words) if (len(possible_words) == 1 and possible_words[0] == guess) or turn+1 == ATTEMPTS else ""
+    session['possible_words'] = possible_words
+    session['previous_guesses'] = previous_guesses
+
+    return_sol = possible_words[0] if (len(possible_words) == 1 and possible_words[0] == guess) or turn+1 == ATTEMPTS else ""
+
+    session["game_over"] = return_sol != ""
     
     return jsonify({
         "validated_guess": validation,
