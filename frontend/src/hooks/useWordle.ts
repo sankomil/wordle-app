@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ILetter, TLetterStatus } from "../types";
-import { validateInput } from "../helpers";
+import { validateInput, getSession } from "../helpers";
 
 export const useWordle = () => {
   const attempts = parseInt(process.env.REACT_APP_ATTEMPTS || "5");
@@ -14,6 +14,59 @@ export const useWordle = () => {
   }>({});
 
   const [gameOver, setGameOver] = useState({ isOver: false, isVictory: false });
+
+  const fetchSession = async () => {
+    const { res, err } = await getSession();
+
+    if (err) {
+      return;
+    }
+
+    if (res.guesses.length === 0) {
+      return;
+    }
+
+    setTurn(res.guesses.length);
+
+    setGuesses(res.guesses);
+
+    if (res.solution) {
+      setSolution(res.solution);
+      const lastGuess = res.guesses[res.guesses.length - 1]
+        .reduce((partial, l) => partial + l.value, "")
+        .trim()
+        .toUpperCase();
+      setGameOver({
+        isOver: true,
+        isVictory: lastGuess === solution && res.guesses.length <= attempts,
+      });
+    }
+
+    setPreviousLetters(() => {
+      const newPreviousLetters: { [key: string]: TLetterStatus } = {};
+
+      res.guesses.forEach((word) => {
+        word.forEach(({ status, value }) => {
+          const existingStatus = newPreviousLetters[value];
+          if (existingStatus === "correct") {
+            return;
+          }
+          if (existingStatus === "misplaced" && status !== "correct") {
+            return;
+          }
+          if (
+            existingStatus === "incorrect" &&
+            status !== "correct" &&
+            status !== "misplaced"
+          ) {
+            return;
+          }
+          newPreviousLetters[value] = status;
+        });
+      });
+      return newPreviousLetters;
+    });
+  };
 
   const addCurrGuess = async () => {
     const { res, err } = await validateInput({
@@ -111,5 +164,6 @@ export const useWordle = () => {
     previousLetters,
     gameOver,
     solution,
+    fetchSession,
   };
 };
