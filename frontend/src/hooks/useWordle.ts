@@ -27,7 +27,7 @@ export const useWordle = () => {
       }
       setTimeout(() => {
         setError("");
-      }, 5000);
+      }, 2000);
       return;
     }
 
@@ -91,7 +91,7 @@ export const useWordle = () => {
       }
       setTimeout(() => {
         setError("");
-      }, 5000);
+      }, 2000);
       return;
     }
 
