@@ -47,6 +47,14 @@ def set_session_expiry_to_end_of_day():
     remaining = (midnight - now)
     app.permanent_session_lifetime = remaining
 
+@app.route("/get-session", methods=["GET"])
+def get_previous_sesion():
+    previous_guesses = session.get("previous_guesses", [])
+    solution = session.get("possible_words")
+    game_over = session.get("game_over")
+
+    return jsonify({"guesses": previous_guesses, "solution": solution[0] if game_over else ""}), 200
+
 @app.route("/validate", methods=["POST"])
 def validate_word():
     data = request.get_json()
