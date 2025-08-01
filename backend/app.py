@@ -11,6 +11,9 @@ from helpers import validate_string, update_word_pool
 
 load_dotenv()
 
+# Load environment variables for session maintainance
+# SECRET_KEY is used for creating session IDs
+# The PostGreSQL database is being used to save session details
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
@@ -24,6 +27,7 @@ app.config['SESSION_COOKIE_PARTITIONED'] = True
 Session(app)
 frontend_url = os.getenv("FRONTEND_URL")
 
+# Allow frontend to pass credentials. If this is not done then fronten cannot pass cookies to server
 CORS(app, supports_credentials=True, origins=[frontend_url])
 
 WORD_POOL = os.getenv("WORD_POOL").split(',')
@@ -31,14 +35,15 @@ WORD_POOL = [word.strip().upper() for word in WORD_POOL]
 ATTEMPTS = int(os.getenv("ATTEMPTS"))
 
 
-
+# Ensure proper headers are added. Necessary for pre-flight checks
 @app.after_request
 def after_request(response):
     response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
     response.headers.add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS")
     return response
 
-
+# Before each request, update the cookie's expiry, ensuring that it is always valid until midnight of current day
+# This is done so that the gamestate only persists for 24 hours, following NYT Wordle's ideology
 @app.before_request
 def set_session_expiry_to_end_of_day():
     session.permanent = True
@@ -47,6 +52,7 @@ def set_session_expiry_to_end_of_day():
     remaining = (midnight - now)
     app.permanent_session_lifetime = remaining
 
+# Returns a saved game state for current session if it exists. Otherwise returns blank array and string
 @app.route("/get-session", methods=["GET"])
 def get_previous_sesion():
     previous_guesses = session.get("previous_guesses", [])
@@ -55,6 +61,9 @@ def get_previous_sesion():
 
     return jsonify({"guesses": previous_guesses, "solution": solution[0] if game_over else ""}), 200
 
+# Validation call. It updates the game state in session
+# If a word pool already exists for the session, it is passed for validation, otherwise we use the entire word bank (i.e. when new session is started)
+# The solution is only returned if the game is over - decided based on number of tries and if user guessed the word correctly
 @app.route("/validate", methods=["POST"])
 def validate_word():
     data = request.get_json()

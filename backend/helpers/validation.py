@@ -1,5 +1,14 @@
 from typing import List, Dict
 
+# Basic validation. It compares the guess against the solution, and assigns the state for each letter
+# It also accounts for repeated words, ensuring that the next instance of a repeated letter in the solution
+# is not incorrectly validated
+
+# The function first goes through each letter in the guess and compares it against the letter in same
+# index in the solution, changing its validation to 'correct' if matched. It also sets matched letter
+# in solution to None. Next we go through the guess object again, checking if an instance of an
+# unvalidated letter exists, and checking if it exists in the solution array. This manages the 
+# 'misplaced' state. The rest of the letters are then assigned 'incorrect' 
 def validate_string(guess:str, solution: str)-> List[Dict[str, str]]:
     sol_array = list(solution)
     validated_guess = [{"value": letter, "status": "invalidated"} for letter in guess]
