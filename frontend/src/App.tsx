@@ -49,6 +49,7 @@ function App() {
           turn={turn}
           attempts={attempts}
           guesses={guesses}
+          error={error}
         />
         <Keypad
           handleButtonPress={handleButtonPress}

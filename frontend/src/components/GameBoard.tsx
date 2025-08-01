@@ -8,6 +8,7 @@ export const GameBoard = ({
   turn,
   guesses,
   currentGuess,
+  error
 }: IGameBoard) => {
   const rows = new Array(attempts).fill("");
 
@@ -25,7 +26,7 @@ export const GameBoard = ({
         if (i < turn) {
           return <Word word={guesses[i]} />;
         } else if (i === turn) {
-          return <Word key={`${i}`} word={currGuessRow} isCurrentGuess />;
+          return <Word key={`${i}`} word={currGuessRow} isCurrentGuess error={error} />;
         } else {
           return (
             <Word
