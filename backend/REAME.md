@@ -5,7 +5,7 @@ This application hosts all the validation logic for the system. It manages sessi
 - helpers: Folder. Holds functions necessary for validating each guess. The validation logic uses Absurdle rules. Each function has a comment explaining what it does
 
 ## Validation
-The validation is done using Absurdle game's logic. The system takes on a more adverserial role, cheating by not choosing a solution at the start of the game. Instead, at each guess, it removes all words from its pool that would have any score, thus ensuring it gives as few hints as possible to the user.
+The validation is done using Absurdle game's logic. The system takes on a more adversarial role, cheating by not choosing a solution at the start of the game. Instead, at each guess, it removes all words from its pool that would have any score, thus ensuring it gives as few hints as possible to the user.
 
 However, once it becomes impossible to maintain a pool of words that has score=0, the system makes a decision by randomly choosing a word from the group of words with the smallest current score.
 
@@ -22,7 +22,7 @@ My biggest reason for using sessions was to store the remaining word pool. Thoug
 
 Thus I turned to PostGreSQL, having had some experience using it professionally, and being able to easily use it as a storage option for sessions using flask-sessions library which managed that for me. This resolved both concerns I had. Postgres as a limit of 1GB for each row, which is more than enough to store the word pool.
 
-The session also persists only for 24 hours. This is again done to mimic Wordle, where the solution is resest at 12 AM everyday. Thus this will ensure that users can come back on a new day and start from a renewed word pool
+The session also persists only for 24 hours. This is again done to mimic Wordle, where the solution is resets at 12 AM everyday. Thus this will ensure that users can come back on a new day and start from a renewed word pool
 
 ### Game state storage
 This was particularly inspired by the NYT Wordle app. Looking into the localStorage on the website, and you will find that the website stores the gamestate there. This is a feasible solution for Wordle, since it has a limit of max 6 tries, meaning there is unlikely to be more than 30 characters that need to be saved. However, since there is no limit on the number of attempts we allow the user, this would make the stored state to be quite large, and thus also slow down the browser. Thus I found server storage to be a better solution, one that did not impact user experience too drastically while also allowing for large storage.

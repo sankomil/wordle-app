@@ -40,7 +40,7 @@ This project is a recreation of the NYT Wordlegame. It servers to demonstrate my
 ### Frontend
 
 1. **React**: One of the most popular JavaScript libraries for building web application. Past experience and vast community support were deciding factors in its selection, as well as the free form approach it provides to building projects.
-2. **Typescript**: Making the project strongly typed and reducing inevitable bugs that would have caused issues at runtime. Not to mention it works extremely well with Eslint, thus killing two birds with one stone.
+2. **Typescript**: Making the project strongly typed and reducing inevitable bugs that would have caused issues at runtime.
 3. **Axios**: The library provides functions to make API calls. Along with this it provides easier management for error states.
 
 ## Running the project
@@ -66,7 +66,7 @@ Open a new terminal and run the following commands:
 ```shell
 cd backend
 virtualenv venv
-./venv/Scripts/Activate
+source ./venv/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -107,4 +107,16 @@ With both projects up and running you are now free to explore the application. T
 - Task 2: A client-server relationship, with all validation occurring on the server side
 - Task 3: Absurdle. An antagonistic validation pattern that does not choose a solution at game start, but rather maintains a pool of potential solutions based on user input
 
-README under the frontend and backend foler discuss each task and implementation ideology in further detail.
+README under the frontend and backend folder discuss each task and implementation ideology in further detail.
+
+
+
+
+## Future enhancements
+The following are improvements I'd like to make the project:
+
+- Enhanced responsiveness: Currently the application is best suited for desktop browsers. I would want to use Bootstrap to make the implementation easier - though it does constrain the styling
+- CI/CD pipeline:
+    - Github workflows: Setup a Github workflow to run on a new release. This would build and deploy the solution to the hosting portal of choice.
+        - I have not implemented this currently because it would not be possible to test this solution with my current implementation - with my DB running locally. Furthermore, it would incur hosting charges.
+- Testing: Currently the project has no testing. I would want to implement this for better coverage, as well as also use it for further maintainability. As more developers are added to the project, code quality and integration will become extremely important. Thus testing would be necessary
