@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import random
 import os
-from flask import Flask, jsonify, request, session
+from flask import Flask, Response, jsonify, request, session
 from dotenv import load_dotenv
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -58,14 +58,17 @@ def get_previous_sesion():
 @app.route("/validate", methods=["POST"])
 def validate_word():
     data = request.get_json()
-    guess = data.get("guess").upper()
+    guess = data.get("guess").strip().upper()
     turn = data.get("turn")
 
     if not guess or turn == None:
-        return jsonify({"error": "Missing required fields"}), 400
+        return Response( "Missing required fields", 400)
 
     if len(guess) != 5:
-        return jsonify({"error": "The guess should be five letters long"}), 400
+        return Response("The guess should be 5 letters long", 500)
+
+    if guess not in WORD_POOL:
+        return Response("Guess is not a valid word", 400)
 
     possible_words = session.get("possible_words", WORD_POOL)
     previous_guesses = session.get("previous_guesses", [])
