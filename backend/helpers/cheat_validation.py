@@ -6,7 +6,7 @@ from .validation import validate_string
 
 
 def cheat_validate(curr_pool: List, current_guess:str)->dict[int, List]:
-    score = {"correct": 2, "misplaced": 1, "incorrect": 0}
+    score = {"correct": 6, "misplaced": 1, "incorrect": 0}
     current_guess = current_guess.strip().upper()
 
     result = defaultdict(list)
