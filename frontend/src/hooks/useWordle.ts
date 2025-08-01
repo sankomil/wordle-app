@@ -16,6 +16,7 @@ export const useWordle = () => {
 
   const [gameOver, setGameOver] = useState({ isOver: false, isVictory: false });
 
+  // Calls the server on app load to check if a session exists or not. Update the states if a state has been found
   const fetchSession = async () => {
     const { res, err } = await getSession();
 
@@ -77,6 +78,8 @@ export const useWordle = () => {
     });
   };
 
+  // Make an API call to validate the current guess and process it accordingly. Based on server feedback, states are updated
+  // On input error the turn is not updated, instead allowing user to try another guess
   const addCurrGuess = async () => {
     const { res, err } = await validateInput({
       guess: currentGuess,
@@ -131,6 +134,8 @@ export const useWordle = () => {
     setSolution(res.solution);
   };
 
+  // Attached to the keydown listener. This is to facilitate the use of a keyboard. It only responds if letters, Enter or Backspace are pressed
+  // The enter button only takes an action of all five letters have been entered for the current turn
   const handleKeyPress = (e: KeyboardEvent) => {
     if (gameOver.isOver) {
       return;
@@ -152,6 +157,7 @@ export const useWordle = () => {
     }
   };
 
+  // Same as handleKeyPress, but for the on screen keypad. It has the same logic
   const handleButtonPress = (letter: string) => {
     if (gameOver.isOver) {
       return;
