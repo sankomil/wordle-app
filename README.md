@@ -1,46 +1,110 @@
-# Getting Started with Create React App
+# Wordle App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a recreation of the NYT Wordlegame. It servers to demonstrate my skillset with Python an TypeScript. The project consists of two applications, one each for backend and frontend. The layout of the project is as such:
 
-## Available Scripts
+```
+.
+├── backend
+│   ├── app.py
+│   ├── helpers
+├── frontend
+│   ├── package.json
+│   ├── public
+│   ├── src
+│   │   ├── App
+│   │   ├── components
+│   │   │   ├── GameBoard
+│   │   │   ├── Keypad
+│   │   │   ├── Letter
+│   │   │   ├── Word
+│   │   ├── helpers
+│   │   ├── hooks
+│   │   └── types
+│   │   │   ├── axios
+│   │   │   └── components
+│   ├── tsconfig.json
+│   └── yarn.lock
+└── README.md
+```
 
-In the project directory, you can run:
+## Libraries used
 
-### `yarn start`
+### Backend
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. **Flask**: Flask is Python framework that allows users to make web applications quickly. Due to previous experience with the Framework as well as the vast array of community supported libraries available for it I opted for this framework.
+2. **Flask-SQLAlchemy**: This library is an extension for Flask and allows me to easily access the DB. With this library DB queries become much easier and streamlined.
+3. **Python-Dotenv**: Adds `.env` support to Flask projects. Rather than directly adding all environment variables in the `app.py` file I can now import them from an external file, thus allowing for more privacy when uploading to Git management websites as well as change variables depending on deployment environment.
+4. **Flask-Cors:** A Flask extension for handling Cross-Origin Resource Sharing (CORS), making it possible to send cross-origin requests. I am using it to resolve issues with pre-flight checks from frontend.
+5. **Flask-Session:** An extension for Flask that adds support for server-side sessions. I am using it for maintaining the word pool for each session, as well as storing gamestate on a database.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Frontend
 
-### `yarn test`
+1. **React**: One of the most popular JavaScript libraries for building web application. Past experience and vast community support were deciding factors in its selection, as well as the free form approach it provides to building projects.
+2. **Typescript**: Making the project strongly typed and reducing inevitable bugs that would have caused issues at runtime. Not to mention it works extremely well with Eslint, thus killing two birds with one stone.
+3. **Axios**: The library provides functions to make API calls. Along with this it provides easier management for error states.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Running the project
 
-### `yarn build`
+The requirement for this project is as follows:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Python:** 3.12.5
+- **pip:** 24.0
+- **Node:** 22.14.0
+- **Yarn:** 1.22.22
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+**Warning**. Please do not try to use `npm` with this project as it does not contain a package lock file. Doing so may result in errors when installing packages.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```shell
+git clone https://github.com/sankomil/wordle-app.git
+cd wordle-app
+```
 
-### `yarn eject`
+### Backend
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Open a new terminal and run the following commands:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```shell
+cd backend
+virtualenv venv
+./venv/Scripts/Activate
+pip install -r requirements.txt
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Once all requirements have been installed, make sure that the `.env` file in the backend folder is populated properly. Refer to the `.env` file under `backend` folder for reference.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Before running the app, please ensure your DB is up and running, and acessable with the credentials provided in `.env`
 
-## Learn More
+Make sure you are still in the `backend` directory. Now we can start the project with:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```python
+flask run
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This will run the backend application on port `5000`
+
+### Frontend
+
+Open a new terminal and run the following commands:
+
+```shell
+cd frontend
+yarn
+```
+
+Once all requirements have been installed, populate the `.env` file for the frontend as well. Refer to the `.env` file under folder `frontend` for reference.
+
+Still remaining in the `frontend` directory, run:
+
+```node
+yarn start
+```
+
+This will run the frontend application on port `3000`
+
+With both projects up and running you are now free to explore the application. This project implements the following tasks:
+
+- Task 1: A Wordle game that matches the scoring system for the NYT Wordle game
+- Task 2: A client-server relationship, with all validation occurring on the server side
+- Task 3: Absurdle. An antagonistic validation pattern that does not choose a solution at game start, but rather maintains a pool of potential solutions based on user input
+
+README under the frontend and backend foler discuss each task and implementation ideology in further detail.
